@@ -1,3 +1,4 @@
 service : {
+  getNFTsByOwner: (user: principal) -> (vec principal) query;
   mint: (name: text, content: vec nat8) -> (principal);
 }

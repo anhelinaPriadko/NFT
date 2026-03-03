@@ -15,7 +15,7 @@ function Item(props) {
   const agent = new HttpAgent({ host: localHost });
 
   async function loadNFT() {
-    const nftPrincipal = Principal.fromText(id);
+    const nftPrincipal = id;
     const NFTActor = await Actor.createActor(idlFactory, {
       agent,
       canisterId: nftPrincipal,
