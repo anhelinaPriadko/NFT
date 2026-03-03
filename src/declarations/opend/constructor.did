@@ -1,2 +1,3 @@
 service : {
+  mint: (name: text, content: vec nat8) -> (principal);
 }

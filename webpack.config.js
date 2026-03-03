@@ -29,8 +29,9 @@ function initCanisterEnv() {
 
   return Object.entries(canisterConfig).reduce((prev, current) => {
     const [canisterName, canisterDetails] = current;
-    prev[canisterName.toUpperCase() + "_CANISTER_ID"] =
-      canisterDetails[network];
+    const canisterId = canisterDetails[network];
+    prev[canisterName.toUpperCase() + "_CANISTER_ID"] = canisterId;
+    prev["CANISTER_ID_" + canisterName.toUpperCase()] = canisterId; 
     return prev;
   }, {});
 }

@@ -42,7 +42,7 @@ function Item(props) {
       <div className="disPaper-root disCard-root makeStyles-root-17 disPaper-elevation1 disPaper-rounded">
         <img
           className="disCardMedia-root makeStyles-image-19 disCardMedia-media disCardMedia-img"
-          src={logo}
+          src={image}
         />
         <div className="disCardContent-root">
           <h2 hidden={isHidden} 
