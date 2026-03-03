@@ -3,12 +3,16 @@ import logo from "../../assets/logo.png";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from "../../../declarations/nft/service.did.js";
 import {Principal} from "@dfinity/principal";
+import Button from "./Button";
+import {opend} from "../../../declarations/opend";
 
 function Item(props) {
   const [name, setName] = useState();
   const [owner, setOwner] = useState();
   const [image, setImage] = useState();
   const [isHidden, setIsHidden] = useState(true);
+  const [button, setButton] = useState();
+  const [priceInput, setPriceInput] = useState();
 
   const { id } = props;
   const localHost = "http://uzt4z-lp777-77774-qaabq-cai.localhost:8000/";
@@ -30,7 +34,26 @@ function Item(props) {
     setName(nameResult);
     setOwner(ownerResult.toText());
     setImage(image);
+
+    setButton(<Button handleClick={handleSell} text={"Sell"}/>);
     setIsHidden(false);
+  }
+
+  let price;
+  function handleSell() {
+    setPriceInput(<input
+        placeholder="Price in DANG"
+        type="number"
+        className="price-input"
+        value={price}
+        onChange={(e) => price = e.target.value}
+      />);
+    setButton(<Button handleClick={sellItem} text={"Confirm"}/>)
+  }
+
+  async function sellItem() {
+    const listingresult = await opend.listItem(id, Number(price));
+    console.log("Listing result:", listingresult);
   }
 
   useEffect(() => {
@@ -53,6 +76,8 @@ function Item(props) {
           className="disTypography-root makeStyles-bodyText-24 disTypography-body2 disTypography-colorTextSecondary">
             {`Owner: ${owner}`}
           </p>
+          {priceInput}
+          {button}
         </div>
       </div>
     </div>

@@ -7,8 +7,15 @@ import HashMap "mo:base/HashMap";
 import List "mo:base/List";
 
 persistent actor OpenD {
+
+    private type Listing = {
+        owner: Principal;
+        price: Nat;
+    };
+
     transient var mapOfNFTs = HashMap.HashMap<Principal, NFTActorClass.NFT>(1, Principal.equal, Principal.hash);
     transient var mapOfOwners = HashMap.HashMap<Principal, List.List<Principal>>(1, Principal.equal, Principal.hash);
+    transient var mapOfListings = HashMap.HashMap<Principal, Listing>(1, Principal.equal, Principal.hash);
 
     let cyclesForNewCanister = 2_000_000_000_000;
     public shared(msg) func mint(name: Text, content: [Nat8]) : async Principal {
@@ -37,5 +44,25 @@ persistent actor OpenD {
         };
 
         return List.toArray(ownedNFTs);
+    };
+
+    public shared(msg) func listItem(id:Principal, price:Nat) : async Text {
+        var item: NFTActorClass.NFT = switch (mapOfNFTs.get(id)){
+            case null return "NFT not found";
+            case (?nft) nft;
+        };
+
+        let owner = await item.getOwner();
+        if (Principal.equal(owner, msg.caller) == false) {
+            return "Only the owner can list this item";
+        };
+
+        let listing: Listing = {
+            owner = owner;
+            price = price;
+        };
+        mapOfListings.put(id, listing);
+
+        return "Success!"
     };
 };
