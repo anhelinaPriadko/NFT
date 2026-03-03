@@ -1,2 +1,6 @@
-service : {
-}
+type NFT = service {
+  getAsset : () -> (blob) query;
+  getName : () -> (text) query;
+  getOwner : () -> (principal) query;
+};
+service : (text, principal, blob) -> NFT

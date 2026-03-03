@@ -57,6 +57,11 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".ts", ".jsx", ".tsx"],
+    alias: {
+    "./nft.did.js": path.resolve(__dirname, "src/declarations/nft/service.did.js"),
+    "./opend.did.js": path.resolve(__dirname, "src/declarations/opend/service.did.js"),
+    "declarations": path.resolve(__dirname, "src/declarations"),
+  },
     fallback: {
       assert: require.resolve("assert/"),
       buffer: require.resolve("buffer/"),

@@ -3,12 +3,15 @@ import Header from "./Header";
 import Footer from "./Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import homeImage from "../../assets/home-img.png";
+import Item from "./Item";
 
 function App() {
+ const NFTID = "uxrrr-q7777-77774-qaaaq-cai";
+  
   return (
     <div className="App">
       <Header />
-      <img className="bottom-space" src={homeImage} />
+      <Item id={NFTID} />
       <Footer />
     </div>
   );
