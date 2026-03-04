@@ -3,6 +3,7 @@ import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
 export interface _SERVICE {
+  'completePurchase' : ActorMethod<[Principal, Principal, Principal], string>,
   'getListedNFTs' : ActorMethod<[], Array<Principal>>,
   'getNFTsByOwner' : ActorMethod<[Principal], Array<Principal>>,
   'getOpenDID' : ActorMethod<[], Principal>,

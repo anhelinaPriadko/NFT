@@ -7,6 +7,7 @@ import Button from "./Button";
 import {opend} from "../../../declarations/opend";
 import CURRENT_USER_ID from "../index";
 import PriceLabel from "./PriceLabel";
+import { idlFactory as tokenIdlFactory} from "../../../declarations/token/service.did.js";
 
 function Item(props) {
   const [name, setName] = useState();
@@ -19,6 +20,7 @@ function Item(props) {
   const [blur, setBlur] = useState();
   const [sellStatus, setSellStatus] = useState("");
   const [priceLabel, setPriceLabel] = useState();
+  const [shouldDisplay, setShouldDisplay] = useState(true);
 
   const { id } = props;
   const localHost = "http://uzt4z-lp777-77774-qaabq-cai.localhost:8000/";
@@ -79,6 +81,34 @@ function Item(props) {
 
   async function handleBuy() {
     console.log("Buying NFT...");
+    setLoaderHidden(false);
+
+    const tokenAgent = new HttpAgent({ host: "http://u6s2n-gx777-77774-qaaba-cai.localhost:8001" });
+    if (process.env.NODE_ENV !== "production") {
+      await tokenAgent.fetchRootKey(); 
+    }
+
+    const tokenActor = await Actor.createActor(tokenIdlFactory, {
+      agent: tokenAgent,
+      canisterId: Principal.fromText("uxrrr-q7777-77774-qaaaq-cai"),
+    });
+
+    try {
+      const sellerId = await opend.getOriginalOwner(id);
+      const price = await opend.getPrice(id);
+      
+      const transferResult = await tokenActor.transfer(sellerId, price);
+      console.log("Transfer result:", transferResult);
+      
+      if (transferResult === "Transfer successful!") {
+       const result = await opend.completePurchase(id, sellerId, CURRENT_USER_ID);
+        console.log("Purchase result:", result);
+      }
+      setLoaderHidden(true);
+      setShouldDisplay(false);
+    } catch (error) {
+      console.error("Purchase failed:", error);
+    }
   }
 
   async function sellItem() {
@@ -103,7 +133,7 @@ function Item(props) {
   }, []);
 
   return (
-    <div className="disGrid-item">
+    <div style={{display: shouldDisplay ? "inline" : "none"}}className="disGrid-item">
       <div className="disPaper-root disCard-root makeStyles-root-17 disPaper-elevation1 disPaper-rounded">
         <img
           className="disCardMedia-root makeStyles-image-19 disCardMedia-media disCardMedia-img"

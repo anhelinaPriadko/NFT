@@ -1,4 +1,6 @@
 service : {
+  completePurchase: (id: principal, owner: principal, newOwner: principal) ->
+   (text);
   getListedNFTs: () -> (vec principal) query;
   getNFTsByOwner: (user: principal) -> (vec principal) query;
   getOpenDID: () -> (principal) query;

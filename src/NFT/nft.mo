@@ -28,6 +28,7 @@ persistent actor class NFT (name: Text, owner: Principal, content: [Nat8]) = thi
         if (Principal.equal(msg.caller, nftOwner) == false) {
             return "Only the owner can transfer ownership";
         };
+        nftOwner := newOwner;
         return "Ownership transferred successfully";
     };
 };

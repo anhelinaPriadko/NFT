@@ -100,4 +100,30 @@ persistent actor OpenD {
 
         return listing.price;
     };
+
+    public shared(msg) func completePurchase(id: Principal, owner: Principal, newOwner: Principal): async Text {
+        var purchasingNFT: NFTActorClass.NFT = switch (mapOfNFTs.get(id)){
+            case null return "NFT not found";
+            case (?nft) nft;
+        };
+
+        let transferResult = await purchasingNFT.transferOwnership(newOwner);
+        if (transferResult != "Ownership transferred successfully") {
+            return transferResult;
+        };
+
+        mapOfListings.delete(id);
+        var ownedNFTs: List.List<Principal> = switch (mapOfOwners.get(owner)){
+            case null List.nil<Principal>();
+            case (?list) list;
+        };
+
+        ownedNFTs := List.filter(ownedNFTs, func(listItemId: Principal) : Bool { 
+            return listItemId != id;
+        });
+        
+        addToOwnershipMap(newOwner, id);
+
+        return "Purchase completed successfully";
+    };
 };
