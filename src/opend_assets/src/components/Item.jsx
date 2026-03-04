@@ -13,6 +13,9 @@ function Item(props) {
   const [isHidden, setIsHidden] = useState(true);
   const [button, setButton] = useState();
   const [priceInput, setPriceInput] = useState();
+  const [loaderHidden, setLoaderHidden] = useState(true);
+  const [blur, setBlur] = useState();
+  const [sellStatus, setSellStatus] = useState("");
 
   const { id } = props;
   const localHost = "http://uzt4z-lp777-77774-qaabq-cai.localhost:8000/";
@@ -38,7 +41,14 @@ function Item(props) {
     setOwner(ownerResult.toText());
     setImage(image);
 
-    setButton(<Button handleClick={handleSell} text={"Sell"}/>);
+    const nftListed = await opend.isListed(id);
+    if(nftListed) {
+      setOwner(`OpenD`);
+      setBlur({filter: "blur(4px)"});
+      setSellStatus(" - Listed for Sale");
+    } else{
+      setButton(<Button handleClick={handleSell} text={"Sell"}/>);
+    }
     setIsHidden(false);
   }
 
@@ -55,11 +65,19 @@ function Item(props) {
   }
 
   async function sellItem() {
+    setBlur({filter: "blur(4px)"});
+    setLoaderHidden(false);
     const listingresult = await opend.listItem(id, Number(price));
     if (listingresult === "Success!") {
       const openDId = await opend.getOpenDID();
       const transferResult =await NFTActor.transferOwnership(openDId);
-      console.log(transferResult);
+      if(transferResult === "Ownership transferred successfully") {
+        setLoaderHidden(true);
+        setSellStatus(" - Listed for Sale");
+        setButton();
+        setPriceInput();
+        setOwner("OpenD");
+      }
     }
   }
 
@@ -73,11 +91,21 @@ function Item(props) {
         <img
           className="disCardMedia-root makeStyles-image-19 disCardMedia-media disCardMedia-img"
           src={image}
+          style={blur}
         />
+        {!loaderHidden && (
+          <div className="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        )}
         <div className="disCardContent-root">
           <h2 hidden={isHidden} 
             className="disTypography-root makeStyles-bodyText-24 disTypography-h5 disTypography-gutterBottom">
-            <span className="purple-text">{name}</span>
+              {name}
+            <span className="purple-text">{sellStatus}</span>
           </h2>
           <p hidden={isHidden}
           className="disTypography-root makeStyles-bodyText-24 disTypography-body2 disTypography-colorTextSecondary">

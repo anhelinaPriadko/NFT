@@ -68,5 +68,12 @@ persistent actor OpenD {
 
     public query func getOpenDID (): async Principal{
         return Principal.fromActor(OpenD);
-    }
+    };
+
+    public query func isListed(id: Principal) : async Bool {
+        return switch (mapOfListings.get(id)){
+            case null false;
+            case (?listing) true;
+        };
+    };
 };
