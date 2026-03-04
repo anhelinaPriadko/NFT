@@ -1,19 +1,41 @@
-Copyright 2022 London App Brewery LTD (www.appbrewery.com)
+# OpenD — Decentralized NFT Marketplace
 
-The code in this tutorial project is licended under the Apache License, Version 2.0 (the "License");
-you may not use this project except in compliance with the License.
-You may obtain a copy of the License at
+**OpenD** is a non-custodial NFT marketplace built on the **Internet Computer (ICP)** that allows users to mint, list, and trade digital assets.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+---
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+## Key Features
 
-Here is the TL;DR version of the above licence:
-https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)
+* **NFT Minting**: Each NFT is generated as a unique **Actor Class** instance, ensuring independent on-chain storage for metadata and assets.
+* **Decentralized Listing**: Owners can list NFTs for sale by setting a price in **DANG tokens** and transferring ownership to the OpenD factory canister.
+* **Secure Trading**: Supports atomic purchases where tokens are transferred to the seller and NFT ownership is updated in a single transaction flow via `completePurchase`.
+
+[Image of Internet Computer canister-to-canister communication architecture]
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+| :--- | :--- |
+| **Backend** | Motoko (Persistent Actors, HashMaps, Actor Classes) |
+| **Frontend** | React.js, Material UI, Webpack |
+| **Blockchain** | Internet Computer (ICP) |
+| **Communication** | @dfinity/agent, @dfinity/principal |
+
+---
+
+## Quick Start
+
+1.  **Start the local replica**:
+    ```bash
+    dfx start --clean
+    ```
+2.  **Deploy Canisters**:
+    ```bash
+    dfx deploy
+    ```
+3.  **Launch Frontend**:
 
 # To Install and Run the Project
 
