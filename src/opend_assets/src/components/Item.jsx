@@ -5,6 +5,8 @@ import { idlFactory } from "../../../declarations/nft/service.did.js";
 import {Principal} from "@dfinity/principal";
 import Button from "./Button";
 import {opend} from "../../../declarations/opend";
+import CURRENT_USER_ID from "../index";
+import PriceLabel from "./PriceLabel";
 
 function Item(props) {
   const [name, setName] = useState();
@@ -16,6 +18,7 @@ function Item(props) {
   const [loaderHidden, setLoaderHidden] = useState(true);
   const [blur, setBlur] = useState();
   const [sellStatus, setSellStatus] = useState("");
+  const [priceLabel, setPriceLabel] = useState();
 
   const { id } = props;
   const localHost = "http://uzt4z-lp777-77774-qaabq-cai.localhost:8000/";
@@ -41,13 +44,23 @@ function Item(props) {
     setOwner(ownerResult.toText());
     setImage(image);
 
-    const nftListed = await opend.isListed(id);
-    if(nftListed) {
-      setOwner(`OpenD`);
-      setBlur({filter: "blur(4px)"});
-      setSellStatus(" - Listed for Sale");
-    } else{
-      setButton(<Button handleClick={handleSell} text={"Sell"}/>);
+    if(props.role === "collection") {
+        const nftListed = await opend.isListed(id);
+      if(nftListed) {
+        setOwner(`OpenD`);
+        setBlur({filter: "blur(4px)"});
+        setSellStatus(" - Listed for Sale");
+      } else{
+        setButton(<Button handleClick={handleSell} text={"Sell"}/>);
+      }
+    } else if(props.role === "discover") {
+      const originalOwner = await opend.getOriginalOwner(id);
+      setOwner(originalOwner.toText());
+      if(originalOwner.toText() != CURRENT_USER_ID.toText()) {
+        setButton(<Button handleClick={handleBuy} text={"Buy"}/>);
+      }
+      const price = await opend.getPrice(id);
+      setPriceLabel(<PriceLabel price={price.toString()}/>);
     }
     setIsHidden(false);
   }
@@ -62,6 +75,10 @@ function Item(props) {
         onChange={(e) => price = e.target.value}
       />);
     setButton(<Button handleClick={sellItem} text={"Confirm"}/>)
+  }
+
+  async function handleBuy() {
+    console.log("Buying NFT...");
   }
 
   async function sellItem() {
@@ -93,6 +110,7 @@ function Item(props) {
           src={image}
           style={blur}
         />
+        {priceLabel}
         {!loaderHidden && (
           <div className="lds-ellipsis">
             <div></div>
