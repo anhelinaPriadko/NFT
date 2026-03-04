@@ -17,10 +17,13 @@ function Item(props) {
   const { id } = props;
   const localHost = "http://uzt4z-lp777-77774-qaabq-cai.localhost:8000/";
   const agent = new HttpAgent({ host: localHost });
+  // TODO: Remove when ready to deploy live
+  agent.fetchRootKey();
+  let NFTActor;
 
   async function loadNFT() {
     const nftPrincipal = id;
-    const NFTActor = await Actor.createActor(idlFactory, {
+    NFTActor = await Actor.createActor(idlFactory, {
       agent,
       canisterId: nftPrincipal,
     });
@@ -53,7 +56,11 @@ function Item(props) {
 
   async function sellItem() {
     const listingresult = await opend.listItem(id, Number(price));
-    console.log("Listing result:", listingresult);
+    if (listingresult === "Success!") {
+      const openDId = await opend.getOpenDID();
+      const transferResult =await NFTActor.transferOwnership(openDId);
+      console.log(transferResult);
+    }
   }
 
   useEffect(() => {

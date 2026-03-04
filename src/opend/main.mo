@@ -65,4 +65,8 @@ persistent actor OpenD {
 
         return "Success!"
     };
+
+    public query func getOpenDID (): async Principal{
+        return Principal.fromActor(OpenD);
+    }
 };

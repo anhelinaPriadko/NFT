@@ -1,5 +1,6 @@
 service : {
   getNFTsByOwner: (user: principal) -> (vec principal) query;
+  getOpenDID: () -> (principal) query;
   listItem: (id: principal, price: nat) -> (text);
   mint: (name: text, content: vec nat8) -> (principal);
 }

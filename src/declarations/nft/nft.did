@@ -4,5 +4,6 @@ type NFT =
    getCanisterId: () -> (principal) query;
    getName: () -> (text) query;
    getOwner: () -> (principal) query;
+   transferOwnership: (newOwner: principal) -> (text);
  };
 service : (name: text, owner: principal, content: vec nat8) -> NFT

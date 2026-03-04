@@ -7,6 +7,7 @@ export interface NFT {
   'getCanisterId' : ActorMethod<[], Principal>,
   'getName' : ActorMethod<[], string>,
   'getOwner' : ActorMethod<[], Principal>,
+  'transferOwnership' : ActorMethod<[Principal], string>,
 }
 export interface _SERVICE extends NFT {}
 export declare const idlFactory: IDL.InterfaceFactory;

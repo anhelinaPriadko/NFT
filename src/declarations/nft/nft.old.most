@@ -2,5 +2,5 @@
 actor {
   stable imageBytes : [Nat8];
   stable itemName : Text;
-  stable nftOwner : Principal
+  stable var nftOwner : Principal
 };
